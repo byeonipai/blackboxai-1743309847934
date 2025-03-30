@@ -47,12 +47,36 @@ class NoteForm extends HTMLElement {
     titleInput.addEventListener('input', () => this.validateField(titleInput, titleError));
     bodyInput.addEventListener('input', () => this.validateField(bodyInput, bodyError));
 
+    // Handle edit mode
+    let isEditMode = false;
+    let currentNoteId = null;
+
+    document.addEventListener('note-edit', (e) => {
+      isEditMode = true;
+      currentNoteId = e.detail.noteId;
+      titleInput.value = e.detail.title;
+      bodyInput.value = e.detail.body;
+      form.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-save mr-2"></i>Update Note';
+    });
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const isValid = this.validateField(titleInput, titleError) && 
                      this.validateField(bodyInput, bodyError);
 
       if (isValid) {
+        if (isEditMode) {
+          // Update existing note
+          const noteIndex = window.notes.findIndex(n => n.id === currentNoteId);
+          if (noteIndex !== -1) {
+          window.notes[noteIndex].title = titleInput.value;
+          window.notes[noteIndex].body = bodyInput.value;
+          saveNotes(); // Simpan perubahan ke localStorage
+        }
+        isEditMode = false;
+        form.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-plus mr-2"></i>Add Note';
+      } else {
+        // Add new note
         const newNote = {
           id: `notes-${Math.random().toString(36).substring(2, 15)}`,
           title: titleInput.value,
@@ -61,7 +85,9 @@ class NoteForm extends HTMLElement {
           archived: false
         };
         window.notes.push(newNote);
-        this.dispatchEvent(new CustomEvent('note-added', { bubbles: true }));
+        saveNotes(); // Simpan catatan baru ke localStorage
+      }
+      this.dispatchEvent(new CustomEvent('note-added', { bubbles: true }));
         form.reset();
       }
     });
