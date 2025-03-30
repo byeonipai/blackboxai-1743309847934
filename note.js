@@ -24,24 +24,25 @@ class NoteItem extends HTMLElement {
       <style>
         .note-card {
           background: white;
-          border-radius: 0.5rem;
+          border-radius: 0.75rem;
           padding: 1.5rem;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 2px 6px rgba(249, 168, 212, 0.1);
+          transition: all 0.2s ease;
           height: 100%;
           display: flex;
           flex-direction: column;
-          border-left: 4px solid var(--note-color, #3b82f6);
+          border-left: 4px solid #f9a8d4;
+          margin-bottom: 1rem;
         }
         .note-card:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .note-title {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin-bottom: 0.75rem;
-          color: #1f2937;
+          font-size: 1.2rem;
+          font-weight: 500;
+          margin-bottom: 1rem;
+          color: #831843;
         }
         .note-body {
           color: #4b5563;
